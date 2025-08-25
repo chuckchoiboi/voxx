@@ -22,6 +22,7 @@
 		C13 /* IntegrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14 /* IntegrationManager.swift */; };
 		C14 /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15 /* ErrorManager.swift */; };
 		C15 /* OpenAIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16 /* OpenAIManager.swift */; };
+		C16 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = F17 /* Config.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		F14 /* IntegrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationManager.swift; sourceTree = "<group>"; };
 		F15 /* ErrorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorManager.swift; sourceTree = "<group>"; };
 		F16 /* OpenAIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIManager.swift; sourceTree = "<group>"; };
+		F17 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 				F14 /* IntegrationManager.swift */,
 				F15 /* ErrorManager.swift */,
 				F16 /* OpenAIManager.swift */,
+				F17 /* Config.swift */,
 				F08 /* Main.storyboard */,
 				F09 /* LaunchScreen.storyboard */,
 				F10 /* Assets.xcassets */,
@@ -176,6 +179,7 @@
 				C13 /* IntegrationManager.swift in Sources */,
 				C14 /* ErrorManager.swift in Sources */,
 				C15 /* OpenAIManager.swift in Sources */,
+				C16 /* Config.swift in Sources */,
 				C11 /* Voxx.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

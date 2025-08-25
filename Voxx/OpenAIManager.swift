@@ -7,7 +7,15 @@ class OpenAIManager {
     
     // MARK: - Configuration
     
-    private let apiKey = "YOUR_OPENAI_API_KEY_HERE" // User will need to add their API key
+    private let apiKey: String = {
+        // Try environment variable first (for CI/CD)
+        if let envKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"] {
+            return envKey
+        }
+        
+        // Use local config file (safer for personal use)
+        return Config.openAIAPIKey
+    }()
     private let baseURL = "https://api.openai.com/v1"
     
     // MARK: - API Models

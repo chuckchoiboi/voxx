@@ -1,0 +1,44 @@
+# Xcode
+build/
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcuserdatad
+
+# Security - API Keys and Sensitive Configuration
+Config.swift
+Voxx/Config.swift
+**/Config.swift
+.env
+.env.local
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.ipa
+*.dSYM.zip
+
+# CocoaPods (if used)
+Pods/
+Podfile.lock
+
+# Carthage (if used)
+Carthage/Build/
+
+# Swift Package Manager
+.build/
+Package.resolved
