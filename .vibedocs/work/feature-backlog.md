@@ -55,24 +55,39 @@ Integrate OpenAI for transcription and summarization capabilities. **Released: A
 - Comprehensive API key setup guidance
 - Background processing with loading states
 
-## v0.3.0-core-features - 🟡 In Progress
-Implement entry management, search, and basic categorization.
+## v0.3.0-core-features - 🟡 In Progress  
+Advanced categorization, tagging system, and enhanced entry management. **Currently Implementing: August 2025**
 
 | ID  | Feature                 | Description                              | Priority | Status |
 |-----|-------------------------|------------------------------------------|----------|--------|
 | F10 | Entry List View         | Display chronological list of entries   | High | 🟢 Completed (delivered in v0.1.0) |
 | F11 | Search Functionality    | Full-text search across content          | High | 🟢 Completed (delivered in v0.1.0) |
-| F12 | Basic Categories        | Predefined category system               | Medium | 🔴 Not Started |
-| F13 | Entry Details           | View individual entry with transcript    | Medium | 🟡 Partial (playback implemented) |
+| F12 | Category System         | Complete category system with predefined + custom | High | 🟢 Completed |
+| F13 | Entry Details View      | Full-screen entry view with audio player | High | 🟢 Completed |
 | F14 | Delete Entries          | Remove unwanted journal entries          | Medium | 🟢 Completed (delivered in v0.1.0) |
+| F15 | Tag System              | Flexible tagging with AI suggestions    | High | 🟢 Completed |
+| F16 | Category Filter UI      | Horizontal category filter bar           | Medium | 🟢 Completed |
+| F17 | Enhanced Entry Cells    | Rich cells with category badges and tags | Medium | 🟢 Completed |
+| F18 | Advanced Search         | Multi-criteria filtering system          | Medium | 🟡 In Progress |
+
+**Major Features Delivered:**
+- **CategoryManager**: Complete CRUD operations for predefined categories (Work, Personal, Ideas, Meetings, Reflections)
+- **TagManager**: Advanced tag system with usage tracking, AI-powered suggestions, auto-complete
+- **EntryDetailsViewController**: Full-screen modal with integrated audio player, transcript, and tag editing
+- **Enhanced Main UI**: Category filter bar, rich table cells with visual category badges and tag pills
+- **Core Data Integration**: Proper entity relationships and optimized queries for categories and tags
+- **Color System**: Hex color support with visual category and tag identification
 
 ## v0.4.0-enhanced-ux - 🔴 Not Started
-Polish user experience with analytics and advanced categorization.
+Polish user experience with analytics and workflow enhancements.
 
 | ID  | Feature                 | Description                              | Priority | Status |
 |-----|-------------------------|------------------------------------------|----------|--------|
-| F15 | Custom Categories       | User-created custom categories           | Medium | 🔴 Not Started |
-| F16 | Basic Analytics         | Journaling streaks and statistics        | Medium | 🔴 Not Started |
-| F17 | UI Polish               | Animations and improved visual design    | Medium | 🔴 Not Started |
-| F18 | Category Management     | Edit and organize categories             | Low | 🔴 Not Started |
-| F19 | Settings Screen         | App preferences and configuration        | Low | 🔴 Not Started |
+| F19 | Recording Workflow      | Category selection during recording      | Medium | 🔴 Not Started |
+| F20 | Tag Input UI            | Auto-complete tag input interface        | Medium | 🔴 Not Started |  
+| F21 | Analytics Dashboard     | Journaling streaks and usage statistics  | Medium | 🔴 Not Started |
+| F22 | Smart Presets           | Saved search filters and smart presets   | Low | 🔴 Not Started |
+| F23 | Settings Screen         | App preferences and configuration        | Low | 🔴 Not Started |
+| F24 | Export Features         | Export entries in various formats        | Low | 🔴 Not Started |
+
+**Note**: Custom Categories and Category Management were delivered ahead of schedule in v0.3.0
