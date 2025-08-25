@@ -23,6 +23,9 @@
 		C14 /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15 /* ErrorManager.swift */; };
 		C15 /* OpenAIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16 /* OpenAIManager.swift */; };
 		C16 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = F17 /* Config.swift */; };
+		C17 /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18 /* CategoryManager.swift */; };
+		C18 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19 /* TagManager.swift */; };
+		C19 /* EntryDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20 /* EntryDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +47,9 @@
 		F15 /* ErrorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorManager.swift; sourceTree = "<group>"; };
 		F16 /* OpenAIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIManager.swift; sourceTree = "<group>"; };
 		F17 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		F18 /* CategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManager.swift; sourceTree = "<group>"; };
+		F19 /* TagManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManager.swift; sourceTree = "<group>"; };
+		F20 /* EntryDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryDetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +94,9 @@
 				F15 /* ErrorManager.swift */,
 				F16 /* OpenAIManager.swift */,
 				F17 /* Config.swift */,
+				F18 /* CategoryManager.swift */,
+				F19 /* TagManager.swift */,
+				F20 /* EntryDetailsViewController.swift */,
 				F08 /* Main.storyboard */,
 				F09 /* LaunchScreen.storyboard */,
 				F10 /* Assets.xcassets */,
@@ -180,6 +189,9 @@
 				C14 /* ErrorManager.swift in Sources */,
 				C15 /* OpenAIManager.swift in Sources */,
 				C16 /* Config.swift in Sources */,
+				C17 /* CategoryManager.swift in Sources */,
+				C18 /* TagManager.swift in Sources */,
+				C19 /* EntryDetailsViewController.swift in Sources */,
 				C11 /* Voxx.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

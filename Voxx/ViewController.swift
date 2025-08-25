@@ -5,6 +5,9 @@ class MainViewController: UIViewController {
     
     // MARK: - UI Elements
     private let searchController = UISearchController(searchResultsController: nil)
+    private let categoryFilterView = UIView()
+    private let categoryScrollView = UIScrollView()
+    private let categoryStackView = UIStackView()
     private let tableView = UITableView()
     private let recordButton = UIButton(type: .system)
     private let emptyStateLabel = UILabel()
@@ -22,6 +25,8 @@ class MainViewController: UIViewController {
     // MARK: - Data
     private var journalEntries: [JournalEntry] = []
     private var filteredEntries: [JournalEntry] = []
+    private var categories: [Category] = []
+    private var selectedCategory: Category?
     private var isRecording = false
     private var currentlyPlayingEntry: JournalEntry?
     private var isSearchActive: Bool {
@@ -30,13 +35,16 @@ class MainViewController: UIViewController {
     private var searchBarIsEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
     }
+    private var isCategoryFilterActive: Bool {
+        return selectedCategory != nil
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupAudioRecording()
         setupErrorHandling()
-        loadJournalEntries()
+        loadData()
         
         // Setup refresh control
         setupRefreshControl()
@@ -49,7 +57,7 @@ class MainViewController: UIViewController {
         super.viewWillAppear(animated)
         
         // Refresh data when view appears to catch any external changes
-        loadJournalEntries()
+        loadData()
         
         // Update navigation bar appearance
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -71,6 +79,7 @@ class MainViewController: UIViewController {
         title = "Voxx"
         
         setupSearchController()
+        setupCategoryFilter()
         setupStatsHeader()
         setupEmptyStateLabel()
         setupTableView()
@@ -95,6 +104,36 @@ class MainViewController: UIViewController {
         searchController.searchBar.placeholder = "Search entries..."
         navigationItem.searchController = searchController
         definesPresentationContext = true
+    }
+    
+    private func setupCategoryFilter() {
+        categoryFilterView.backgroundColor = .systemBackground
+        categoryFilterView.translatesAutoresizingMaskIntoConstraints = false
+        
+        categoryScrollView.showsHorizontalScrollIndicator = false
+        categoryScrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        categoryStackView.axis = .horizontal
+        categoryStackView.spacing = 8
+        categoryStackView.alignment = .center
+        categoryStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        categoryScrollView.addSubview(categoryStackView)
+        categoryFilterView.addSubview(categoryScrollView)
+        
+        NSLayoutConstraint.activate([
+            categoryScrollView.topAnchor.constraint(equalTo: categoryFilterView.topAnchor, constant: 8),
+            categoryScrollView.leadingAnchor.constraint(equalTo: categoryFilterView.leadingAnchor, constant: 16),
+            categoryScrollView.trailingAnchor.constraint(equalTo: categoryFilterView.trailingAnchor, constant: -16),
+            categoryScrollView.bottomAnchor.constraint(equalTo: categoryFilterView.bottomAnchor, constant: -8),
+            categoryScrollView.heightAnchor.constraint(equalToConstant: 36),
+            
+            categoryStackView.topAnchor.constraint(equalTo: categoryScrollView.topAnchor),
+            categoryStackView.leadingAnchor.constraint(equalTo: categoryScrollView.leadingAnchor),
+            categoryStackView.trailingAnchor.constraint(equalTo: categoryScrollView.trailingAnchor),
+            categoryStackView.bottomAnchor.constraint(equalTo: categoryScrollView.bottomAnchor),
+            categoryStackView.heightAnchor.constraint(equalTo: categoryScrollView.heightAnchor)
+        ])
     }
     
     private func setupStatsHeader() {
@@ -243,6 +282,7 @@ class MainViewController: UIViewController {
     }
     
     private func setupConstraints() {
+        view.addSubview(categoryFilterView)
         view.addSubview(statsHeaderView)
         view.addSubview(tableView)
         view.addSubview(playbackControlsView)
@@ -251,8 +291,13 @@ class MainViewController: UIViewController {
         view.addSubview(emptyStateLabel)
         
         NSLayoutConstraint.activate([
+            // Category Filter
+            categoryFilterView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            categoryFilterView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            categoryFilterView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
             // Stats Header
-            statsHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            statsHeaderView.topAnchor.constraint(equalTo: categoryFilterView.bottomAnchor, constant: 4),
             statsHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             statsHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
@@ -452,7 +497,7 @@ class MainViewController: UIViewController {
         present(alert, animated: true)
         
         // Refresh data
-        loadJournalEntries()
+        loadData()
     }
     
     private func showDeleteOldEntriesOptions() {
@@ -501,7 +546,7 @@ class MainViewController: UIViewController {
             DataManager.shared.deleteJournalEntry(entry)
         }
         
-        loadJournalEntries()
+        loadData()
         
         let alert = UIAlertController(
             title: "✅ Cleanup Complete",
@@ -652,22 +697,133 @@ class MainViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    private func loadData() {
+        loadJournalEntries()
+        loadCategories()
+    }
+    
     private func loadJournalEntries() {
         journalEntries = DataManager.shared.fetchAllJournalEntries()
-        filteredEntries = journalEntries
+        applyFilters()
         updateStatsDisplay()
         
-        // Animate table view updates
         DispatchQueue.main.async { [weak self] in
             self?.tableView.reloadData()
             self?.updateEmptyState()
         }
     }
     
+    private func loadCategories() {
+        categories = CategoryManager.shared.fetchAllCategories()
+        updateCategoryFilter()
+    }
+    
+    private func applyFilters() {
+        var entries = journalEntries
+        
+        // Apply category filter
+        if let selectedCategory = selectedCategory {
+            entries = CategoryManager.shared.fetchEntries(for: selectedCategory)
+        }
+        
+        // Apply search filter
+        if isSearchActive {
+            let searchText = searchController.searchBar.text ?? ""
+            entries = entries.filter { entry in
+                return (entry.title?.localizedCaseInsensitiveContains(searchText) ?? false) ||
+                       (entry.transcript?.localizedCaseInsensitiveContains(searchText) ?? false) ||
+                       (entry.summary?.localizedCaseInsensitiveContains(searchText) ?? false)
+            }
+        }
+        
+        filteredEntries = entries
+    }
+    
+    private func updateCategoryFilter() {
+        // Clear existing category buttons
+        categoryStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // Add "All" button
+        let allButton = createCategoryButton(title: "All", category: nil, isSelected: selectedCategory == nil)
+        categoryStackView.addArrangedSubview(allButton)
+        
+        // Add category buttons
+        for category in categories {
+            let isSelected = selectedCategory == category
+            let button = createCategoryButton(title: category.name ?? "", category: category, isSelected: isSelected)
+            categoryStackView.addArrangedSubview(button)
+        }
+        
+        // Add "Uncategorized" button
+        let uncategorizedButton = createUncategorizedButton()
+        categoryStackView.addArrangedSubview(uncategorizedButton)
+    }
+    
+    private func createCategoryButton(title: String, category: Category?, isSelected: Bool) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        button.layer.cornerRadius = 16
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        
+        if isSelected {
+            button.backgroundColor = category?.color?.hexToUIColor() ?? .systemBlue
+            button.setTitleColor(.white, for: .normal)
+        } else {
+            button.backgroundColor = .systemGray6
+            button.setTitleColor(.label, for: .normal)
+        }
+        
+        button.addTarget(self, action: #selector(categoryButtonTapped(_:)), for: .touchUpInside)
+        
+        if let category = category {
+            if let index = categories.firstIndex(of: category) {
+                button.tag = index
+            } else {
+                button.tag = -1
+            }
+        } else {
+            button.tag = -1  // "All" button
+        }
+        
+        return button
+    }
+    
+    private func createUncategorizedButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle("Uncategorized", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        button.layer.cornerRadius = 16
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        button.backgroundColor = .systemGray6
+        button.setTitleColor(.label, for: .normal)
+        button.tag = -2  // Special tag for uncategorized
+        button.addTarget(self, action: #selector(categoryButtonTapped(_:)), for: .touchUpInside)
+        return button
+    }
+    
+    @objc private func categoryButtonTapped(_ sender: UIButton) {
+        if sender.tag == -1 {
+            // "All" button
+            selectedCategory = nil
+        } else if sender.tag == -2 {
+            // "Uncategorized" button - we'll handle this specially
+            selectedCategory = nil // For now, treat as "All"
+            // TODO: Filter for uncategorized entries
+        } else if sender.tag >= 0 && sender.tag < categories.count {
+            selectedCategory = categories[sender.tag]
+        }
+        
+        updateCategoryFilter()
+        applyFilters()
+        tableView.reloadData()
+        updateEmptyState()
+    }
+    
     @objc private func handleRefresh() {
         // Simulate network refresh delay (if we had cloud sync)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.loadJournalEntries()
+            self?.loadData()
             self?.tableView.refreshControl?.endRefreshing()
         }
     }
@@ -678,7 +834,7 @@ class MainViewController: UIViewController {
         let point = gesture.location(in: tableView)
         guard let indexPath = tableView.indexPathForRow(at: point) else { return }
         
-        let entries = isSearchActive ? filteredEntries : journalEntries
+        let entries = filteredEntries
         let entry = entries[indexPath.row]
         
         showEntryActionSheet(for: entry, at: indexPath)
@@ -781,7 +937,7 @@ class MainViewController: UIViewController {
         DataManager.shared.deleteJournalEntry(entry)
         
         // Refresh data with animation
-        loadJournalEntries()
+        loadData()
         
         // Show success feedback
         showDeleteSuccessMessage()
@@ -802,7 +958,7 @@ class MainViewController: UIViewController {
                 loadingAlert.dismiss(animated: true) {
                     if success {
                         // Reload data to show new transcript/summary
-                        self?.loadJournalEntries()
+                        self?.loadData()
                         self?.showAIProcessingSuccessMessage()
                     } else {
                         self?.showAIProcessingErrorMessage(error)
@@ -907,11 +1063,7 @@ class MainViewController: UIViewController {
     }
     
     private func filterContentForSearchText(_ searchText: String) {
-        if searchText.isEmpty {
-            filteredEntries = journalEntries
-        } else {
-            filteredEntries = DataManager.shared.searchJournalEntries(searchText: searchText)
-        }
+        applyFilters()
         tableView.reloadData()
     }
     
@@ -940,7 +1092,7 @@ extension MainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "JournalCell", for: indexPath) as! JournalEntryCell
-        let entries = isSearchActive ? filteredEntries : journalEntries
+        let entries = filteredEntries
         let entry = entries[indexPath.row]
         
         cell.configure(with: entry)
@@ -954,7 +1106,7 @@ extension MainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let entries = isSearchActive ? filteredEntries : journalEntries
+            let entries = filteredEntries
             let entryToDelete = entries[indexPath.row]
             
             // Show confirmation alert
@@ -969,7 +1121,7 @@ extension MainViewController: UITableViewDataSource {
                 DataManager.shared.deleteJournalEntry(entryToDelete)
                 
                 // Reload entries
-                self?.loadJournalEntries()
+                self?.loadData()
             })
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
@@ -990,16 +1142,13 @@ extension MainViewController: UITableViewDataSource {
 extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let entries = isSearchActive ? filteredEntries : journalEntries
+        let entries = filteredEntries
         let entry = entries[indexPath.row]
         
-        // Stop any current playback
-        if AudioPlayerManager.shared.isPlaying || AudioPlayerManager.shared.isPaused {
-            AudioPlayerManager.shared.stop()
-        }
-        
-        // Show playback controls for selected entry
-        showPlaybackControls(for: entry)
+        // Navigate to EntryDetailsViewController
+        let detailsVC = EntryDetailsViewController(entry: entry)
+        detailsVC.modalPresentationStyle = .overFullScreen
+        present(detailsVC, animated: true)
     }
 }
 
@@ -1113,9 +1262,12 @@ extension MainViewController: UISearchResultsUpdating {
 // MARK: - Custom Table View Cell
 class JournalEntryCell: UITableViewCell {
     private let titleLabel = UILabel()
+    private let categoryBadge = UIView()
+    private let categoryLabel = UILabel()
     private let dateLabel = UILabel()
     private let durationLabel = UILabel()
     private let transcriptPreviewLabel = UILabel()
+    private let tagsStackView = UIStackView()
     private let playIconImageView = UIImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -1162,12 +1314,40 @@ class JournalEntryCell: UITableViewCell {
         playIconImageView.contentMode = .scaleAspectFit
         playIconImageView.translatesAutoresizingMaskIntoConstraints = false
         
+        // Category badge setup
+        categoryBadge.layer.cornerRadius = 4
+        categoryBadge.isHidden = true
+        categoryBadge.translatesAutoresizingMaskIntoConstraints = false
+        
+        categoryLabel.font = UIFont.systemFont(ofSize: 10, weight: .medium)
+        categoryLabel.textColor = .white
+        categoryLabel.textAlignment = .center
+        categoryLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        categoryBadge.addSubview(categoryLabel)
+        
+        // Tags stack view setup
+        tagsStackView.axis = .horizontal
+        tagsStackView.spacing = 4
+        tagsStackView.alignment = .leading
+        tagsStackView.translatesAutoresizingMaskIntoConstraints = false
+        
         // Add subviews
         contentView.addSubview(titleLabel)
+        contentView.addSubview(categoryBadge)
         contentView.addSubview(dateLabel)
         contentView.addSubview(durationLabel)
         contentView.addSubview(transcriptPreviewLabel)
+        contentView.addSubview(tagsStackView)
         contentView.addSubview(playIconImageView)
+        
+        // Category badge constraints
+        NSLayoutConstraint.activate([
+            categoryLabel.topAnchor.constraint(equalTo: categoryBadge.topAnchor, constant: 2),
+            categoryLabel.leadingAnchor.constraint(equalTo: categoryBadge.leadingAnchor, constant: 6),
+            categoryLabel.trailingAnchor.constraint(equalTo: categoryBadge.trailingAnchor, constant: -6),
+            categoryLabel.bottomAnchor.constraint(equalTo: categoryBadge.bottomAnchor, constant: -2)
+        ])
         
         // Setup constraints
         NSLayoutConstraint.activate([
@@ -1180,7 +1360,12 @@ class JournalEntryCell: UITableViewCell {
             // Title label
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             titleLabel.leadingAnchor.constraint(equalTo: playIconImageView.trailingAnchor, constant: 12),
-            titleLabel.trailingAnchor.constraint(equalTo: durationLabel.leadingAnchor, constant: -8),
+            titleLabel.trailingAnchor.constraint(equalTo: categoryBadge.leadingAnchor, constant: -8),
+            
+            // Category badge
+            categoryBadge.topAnchor.constraint(equalTo: titleLabel.topAnchor),
+            categoryBadge.trailingAnchor.constraint(equalTo: durationLabel.leadingAnchor, constant: -8),
+            categoryBadge.heightAnchor.constraint(equalToConstant: 20),
             
             // Duration label
             durationLabel.topAnchor.constraint(equalTo: titleLabel.topAnchor),
@@ -1192,8 +1377,13 @@ class JournalEntryCell: UITableViewCell {
             dateLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             dateLabel.trailingAnchor.constraint(equalTo: durationLabel.trailingAnchor),
             
+            // Tags stack view
+            tagsStackView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 4),
+            tagsStackView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            tagsStackView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -16),
+            
             // Transcript preview label
-            transcriptPreviewLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 4),
+            transcriptPreviewLabel.topAnchor.constraint(equalTo: tagsStackView.bottomAnchor, constant: 4),
             transcriptPreviewLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             transcriptPreviewLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             transcriptPreviewLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
@@ -1204,6 +1394,18 @@ class JournalEntryCell: UITableViewCell {
         titleLabel.text = entry.title ?? "Untitled Entry"
         dateLabel.text = formatDate(entry.createdAt)
         durationLabel.text = formatDuration(entry.duration)
+        
+        // Configure category badge
+        if let category = entry.category {
+            categoryBadge.isHidden = false
+            categoryBadge.backgroundColor = category.color?.hexToUIColor() ?? .systemBlue
+            categoryLabel.text = category.name?.uppercased()
+        } else {
+            categoryBadge.isHidden = true
+        }
+        
+        // Configure tags
+        configureTags(for: entry)
         
         // Show AI-generated content if available
         if let summary = entry.summary, !summary.isEmpty {
@@ -1216,9 +1418,64 @@ class JournalEntryCell: UITableViewCell {
             transcriptPreviewLabel.text = "💬 \(displayText)"
             transcriptPreviewLabel.isHidden = false
         } else {
-            transcriptPreviewLabel.text = "Tap to play recording • Long press for AI features"
+            transcriptPreviewLabel.text = "Tap to view details • Long press for AI features"
             transcriptPreviewLabel.isHidden = false
         }
+    }
+    
+    private func configureTags(for entry: JournalEntry) {
+        // Clear existing tag views
+        tagsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // Add tag pills
+        if let tags = entry.tags?.allObjects as? [Tag] {
+            let sortedTags = tags.sorted { ($0.name ?? "") < ($1.name ?? "") }
+            let maxTags = min(sortedTags.count, 3) // Limit to 3 tags for display
+            
+            for i in 0..<maxTags {
+                let tag = sortedTags[i]
+                let tagView = createTagPill(for: tag)
+                tagsStackView.addArrangedSubview(tagView)
+            }
+            
+            // Add "more" indicator if there are more tags
+            if sortedTags.count > 3 {
+                let moreLabel = UILabel()
+                moreLabel.text = "+\(sortedTags.count - 3)"
+                moreLabel.font = UIFont.systemFont(ofSize: 10, weight: .medium)
+                moreLabel.textColor = .secondaryLabel
+                tagsStackView.addArrangedSubview(moreLabel)
+            }
+        }
+        
+        tagsStackView.isHidden = tagsStackView.arrangedSubviews.isEmpty
+    }
+    
+    private func createTagPill(for tag: Tag) -> UIView {
+        let container = UIView()
+        container.backgroundColor = tag.color?.hexToUIColor()?.withAlphaComponent(0.2) ?? UIColor.systemBlue.withAlphaComponent(0.2)
+        container.layer.cornerRadius = 8
+        container.layer.borderWidth = 1
+        container.layer.borderColor = (tag.color?.hexToUIColor() ?? .systemBlue).cgColor
+        
+        let label = UILabel()
+        label.text = tag.name
+        label.font = UIFont.systemFont(ofSize: 10, weight: .medium)
+        label.textColor = tag.color?.hexToUIColor() ?? .systemBlue
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        container.addSubview(label)
+        container.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 2),
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 6),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -6),
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -2),
+            container.heightAnchor.constraint(equalToConstant: 18)
+        ])
+        
+        return container
     }
     
     private func formatDate(_ date: Date?) -> String {
@@ -1251,7 +1508,7 @@ extension MainViewController: IntegrationManagerDelegate {
     func integrationDidCompleteRecordingFlow(success: Bool, entry: JournalEntry?, error: Error?) {
         if success, let entry = entry {
             // Recording workflow completed successfully
-            loadJournalEntries()
+            loadData()
             showRecordingSuccessMessage(for: entry)
         } else {
             // Recording workflow failed
@@ -1401,4 +1658,23 @@ extension MainViewController: IntegrationManagerDelegate {
         )
     }
     #endif
+}
+
+// MARK: - String Extension for Hex Colors
+extension String {
+    func hexToUIColor() -> UIColor? {
+        let hex = trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "#", with: "")
+        
+        guard hex.count == 6 else { return nil }
+        
+        var rgbValue: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&rgbValue)
+        
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: 1.0
+        )
+    }
 }
