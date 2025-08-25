@@ -38,15 +38,22 @@ Core voice recording and playback functionality with local storage. **Released: 
 - Entry Management (List, Delete, Share)
 - iPhone Deployment & Permissions
 
-## v0.2.0-ai-integration - 🔴 Not Started
-Integrate OpenAI for transcription and summarization capabilities.
+## v0.2.0-ai-integration - 🟢 Completed
+Integrate OpenAI for transcription and summarization capabilities. **Released: August 2025**
 
 | ID  | Feature                 | Description                              | Priority | Status |
 |-----|-------------------------|------------------------------------------|----------|--------|
-| F06 | OpenAI API Client       | Setup API integration for transcription | High | 🔴 Not Started |
-| F07 | Speech-to-Text          | Transcribe audio recordings              | High | 🔴 Not Started |
-| F08 | AI Summarization        | Generate summaries from transcripts      | High | 🔴 Not Started |
-| F09 | Error Handling          | Handle API failures gracefully          | Medium | 🔴 Not Started |
+| F06 | OpenAI API Client       | Setup API integration for transcription | High | 🟢 Completed |
+| F07 | Speech-to-Text          | Transcribe audio recordings              | High | 🟢 Completed |
+| F08 | AI Summarization        | Generate summaries from transcripts      | High | 🟢 Completed |
+| F09 | Error Handling          | Handle API failures gracefully          | Medium | 🟢 Completed |
+
+**Bonus Features Delivered:**
+- Automatic AI processing after recordings
+- Manual AI processing via long-press menus
+- Smart UI with summary/transcript prioritization
+- Comprehensive API key setup guidance
+- Background processing with loading states
 
 ## v0.3.0-core-features - 🟡 In Progress
 Implement entry management, search, and basic categorization.
