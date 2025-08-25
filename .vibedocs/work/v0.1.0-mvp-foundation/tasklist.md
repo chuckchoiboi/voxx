@@ -32,9 +32,9 @@ This document outlines all the tasks to work on to delivery this particular vers
 
 | ID  | Task             | Description                             | Dependencies | Status | Assigned To |
 |-----|------------------|-----------------------------------------|-------------|----------|--------|
-| T10 | Audio Player Manager | Create AudioPlayerManager for playback | T05 | 🔴 Not Started | AGENT |
-| T11 | Playback UI Controls | Play/pause buttons and progress indicators | T04 | 🔴 Not Started | AGENT |
-| T12 | Playback Integration | Connect player to journal entries | T10, T02 | 🔴 Not Started | AGENT |
+| T10 | Audio Player Manager | Create AudioPlayerManager for playback | T05 | 🟢 Completed | AGENT |
+| T11 | Playback UI Controls | Play/pause buttons and progress indicators | T04 | 🟢 Completed | AGENT |
+| T12 | Playback Integration | Connect player to journal entries | T10, T02 | 🟢 Completed | AGENT |
 
 ## Phase 4: Data Persistence & UI
 

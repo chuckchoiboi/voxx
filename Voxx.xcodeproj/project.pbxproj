@@ -3,41 +3,43 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A1000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000 /* AppDelegate.swift */; };
-		A1000003 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002 /* SceneDelegate.swift */; };
-		A1000005 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004 /* ViewController.swift */; };
-		A1000008 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1000006 /* Main.storyboard */; };
-		A1000017 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000016 /* DataManager.swift */; };
-		A1000019 /* AudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000018 /* AudioSessionManager.swift */; };
-		A100001B /* AudioRecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100001A /* AudioRecordingManager.swift */; };
-		A100001D /* AudioFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100001C /* AudioFileManager.swift */; };
-		A100000B /* Voxx.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A1000009 /* Voxx.xcdatamodeld */; };
-		A100000D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A100000C /* Assets.xcassets */; };
-		A1000010 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A100000E /* LaunchScreen.storyboard */; };
+		C01 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01 /* AppDelegate.swift */; };
+		C02 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02 /* SceneDelegate.swift */; };
+		C03 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03 /* ViewController.swift */; };
+		C04 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04 /* DataManager.swift */; };
+		C05 /* AudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05 /* AudioSessionManager.swift */; };
+		C06 /* AudioRecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06 /* AudioRecordingManager.swift */; };
+		C07 /* AudioFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07 /* AudioFileManager.swift */; };
+		C08 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F08 /* Main.storyboard */; };
+		C12 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13 /* AudioPlayerManager.swift */; };
+		C09 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F09 /* LaunchScreen.storyboard */; };
+		C10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10 /* Assets.xcassets */; };
+		C11 /* Voxx.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F11 /* Voxx.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A0FFFFFD /* Voxx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Voxx.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1000000 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A1000002 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		A1000004 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		A1000007 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		A100000A /* Voxx.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Voxx.xcdatamodel; sourceTree = "<group>"; };
-		A100000C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A100000F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A1000011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A1000016 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
-		A1000018 /* AudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionManager.swift; sourceTree = "<group>"; };
-		A100001A /* AudioRecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecordingManager.swift; sourceTree = "<group>"; };
-		A100001C /* AudioFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileManager.swift; sourceTree = "<group>"; };
+		APP /* Voxx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Voxx.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F01 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F02 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		F03 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F04 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		F05 /* AudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionManager.swift; sourceTree = "<group>"; };
+		F06 /* AudioRecordingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecordingManager.swift; sourceTree = "<group>"; };
+		F07 /* AudioFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileManager.swift; sourceTree = "<group>"; };
+		F08 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F09 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F10 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F11 /* Voxx.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Voxx.xcdatamodeld; sourceTree = "<group>"; };
+		F12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F13 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A0FFFFFA /* Frameworks */ = {
+		FWKS = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -47,37 +49,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A0FFFFF4 = {
+		ROOT = {
 			isa = PBXGroup;
 			children = (
-				A0FFFFFF /* Voxx */,
-				A0FFFFFE /* Products */,
+				VOXX /* Voxx */,
+				PRODS /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A0FFFFFE /* Products */ = {
+		PRODS /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A0FFFFFD /* Voxx.app */,
+				APP /* Voxx.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A0FFFFFF /* Voxx */ = {
+		VOXX /* Voxx */ = {
 			isa = PBXGroup;
 			children = (
-				A1000000 /* AppDelegate.swift */,
-				A1000002 /* SceneDelegate.swift */,
-				A1000004 /* ViewController.swift */,
-				A1000016 /* DataManager.swift */,
-				A1000018 /* AudioSessionManager.swift */,
-				A100001A /* AudioRecordingManager.swift */,
-				A100001C /* AudioFileManager.swift */,
-				A1000006 /* Main.storyboard */,
-				A1000009 /* Voxx.xcdatamodeld */,
-				A100000C /* Assets.xcassets */,
-				A100000E /* LaunchScreen.storyboard */,
-				A1000011 /* Info.plist */,
+				F01 /* AppDelegate.swift */,
+				F02 /* SceneDelegate.swift */,
+				F03 /* ViewController.swift */,
+				F04 /* DataManager.swift */,
+				F05 /* AudioSessionManager.swift */,
+				F06 /* AudioRecordingManager.swift */,
+				F07 /* AudioFileManager.swift */,
+				F13 /* AudioPlayerManager.swift */,
+				F08 /* Main.storyboard */,
+				F09 /* LaunchScreen.storyboard */,
+				F10 /* Assets.xcassets */,
+				F11 /* Voxx.xcdatamodeld */,
+				F12 /* Info.plist */,
 			);
 			path = Voxx;
 			sourceTree = "<group>";
@@ -85,13 +88,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A0FFFFFC /* Voxx */ = {
+		TGT /* Voxx */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A1000014 /* Build configuration list for PBXNativeTarget "Voxx" */;
+			buildConfigurationList = CFGS /* Build configuration list for PBXNativeTarget "Voxx" */;
 			buildPhases = (
-				A0FFFFF9 /* Sources */,
-				A0FFFFFA /* Frameworks */,
-				A0FFFFFB /* Resources */,
+				SRCS /* Sources */,
+				FWKS /* Frameworks */,
+				RSRC /* Resources */,
 			);
 			buildRules = (
 			);
@@ -99,25 +102,25 @@
 			);
 			name = Voxx;
 			productName = Voxx;
-			productReference = A0FFFFFD /* Voxx.app */;
+			productReference = APP /* Voxx.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A0FFFFF5 /* Project object */ = {
+		PROJ /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					A0FFFFFC = {
+					TGT = {
 						CreatedOnToolsVersion = 15.0;
 					};
 				};
 			};
-			buildConfigurationList = A0FFFFF8 /* Build configuration list for PBXProject "Voxx" */;
+			buildConfigurationList = PCFGS /* Build configuration list for PBXProject "Voxx" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -125,72 +128,53 @@
 				en,
 				Base,
 			);
-			mainGroup = A0FFFFF4;
-			productRefGroup = A0FFFFFE /* Products */;
+			mainGroup = ROOT;
+			productRefGroup = PRODS /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A0FFFFFC /* Voxx */,
+				TGT /* Voxx */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A0FFFFFB /* Resources */ = {
+		RSRC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1000010 /* LaunchScreen.storyboard in Resources */,
-				A100000D /* Assets.xcassets in Resources */,
-				A1000008 /* Main.storyboard in Resources */,
+				C08 /* Main.storyboard in Resources */,
+				C09 /* LaunchScreen.storyboard in Resources */,
+				C10 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A0FFFFF9 /* Sources */ = {
+		SRCS /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1000005 /* ViewController.swift in Sources */,
-				A100000B /* Voxx.xcdatamodeld in Sources */,
-				A1000001 /* AppDelegate.swift in Sources */,
-				A1000003 /* SceneDelegate.swift in Sources */,
-				A1000017 /* DataManager.swift in Sources */,
-				A1000019 /* AudioSessionManager.swift in Sources */,
-				A100001B /* AudioRecordingManager.swift in Sources */,
-				A100001D /* AudioFileManager.swift in Sources */,
+				C01 /* AppDelegate.swift in Sources */,
+				C02 /* SceneDelegate.swift in Sources */,
+				C03 /* ViewController.swift in Sources */,
+				C04 /* DataManager.swift in Sources */,
+				C05 /* AudioSessionManager.swift in Sources */,
+				C06 /* AudioRecordingManager.swift in Sources */,
+				C07 /* AudioFileManager.swift in Sources */,
+				C12 /* AudioPlayerManager.swift in Sources */,
+				C11 /* Voxx.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		A1000006 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A1000007 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		A100000E /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A100000F /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
-		A1000012 /* Debug */ = {
+		DBG /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -223,7 +207,6 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -239,7 +222,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -249,11 +231,10 @@
 			};
 			name = Debug;
 		};
-		A1000013 /* Release */ = {
+		REL /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -286,7 +267,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -296,7 +276,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -305,21 +284,18 @@
 			};
 			name = Release;
 		};
-		A1000015 /* Debug */ = {
+		TDBG /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Voxx/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Voxx needs microphone access to record your voice journal entries.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -335,21 +311,18 @@
 			};
 			name = Debug;
 		};
-		A1000016 /* Release */ = {
+		TREL /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Voxx/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Voxx needs microphone access to record your voice journal entries.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -368,20 +341,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A0FFFFF8 /* Build configuration list for PBXProject "Voxx" */ = {
+		PCFGS /* Build configuration list for PBXProject "Voxx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1000012 /* Debug */,
-				A1000013 /* Release */,
+				DBG /* Debug */,
+				REL /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A1000014 /* Build configuration list for PBXNativeTarget "Voxx" */ = {
+		CFGS /* Build configuration list for PBXNativeTarget "Voxx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1000015 /* Debug */,
-				A1000016 /* Release */,
+				TDBG /* Debug */,
+				TREL /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -389,17 +362,23 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		A1000009 /* Voxx.xcdatamodeld */ = {
+		F11 /* Voxx.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				A100000A /* Voxx.xcdatamodel */,
+				F11SUB,
 			);
-			currentVersion = A100000A /* Voxx.xcdatamodel */;
+			currentVersion = F11SUB;
 			path = Voxx.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
+		F11SUB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.xcdatamodel;
+			path = Voxx.xcdatamodel;
+			sourceTree = "<group>";
+		};
 /* End XCVersionGroup section */
 	};
-	rootObject = A0FFFFF5 /* Project object */;
+	rootObject = PROJ /* Project object */;
 }
