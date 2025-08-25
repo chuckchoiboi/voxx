@@ -1,4 +1,5 @@
 import UIKit
+import AVFoundation
 
 class MainViewController: UIViewController {
     
@@ -6,13 +7,16 @@ class MainViewController: UIViewController {
     private let tableView = UITableView()
     private let recordButton = UIButton(type: .system)
     private let emptyStateLabel = UILabel()
+    private let recordingTimeLabel = UILabel()
     
     // MARK: - Data
     private var journalEntries: [JournalEntry] = []
+    private var isRecording = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupAudioRecording()
         loadJournalEntries()
     }
     
@@ -23,6 +27,7 @@ class MainViewController: UIViewController {
         setupEmptyStateLabel()
         setupTableView()
         setupRecordButton()
+        setupRecordingTimeLabel()
         setupConstraints()
     }
     
@@ -43,18 +48,26 @@ class MainViewController: UIViewController {
     }
     
     private func setupRecordButton() {
-        recordButton.setTitle("🎤 Record", for: .normal)
+        updateRecordButtonAppearance()
         recordButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
-        recordButton.backgroundColor = .systemRed
-        recordButton.setTitleColor(.white, for: .normal)
         recordButton.layer.cornerRadius = 25
         recordButton.translatesAutoresizingMaskIntoConstraints = false
         recordButton.addTarget(self, action: #selector(recordButtonTapped), for: .touchUpInside)
     }
     
+    private func setupRecordingTimeLabel() {
+        recordingTimeLabel.text = "00:00"
+        recordingTimeLabel.textAlignment = .center
+        recordingTimeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 18, weight: .medium)
+        recordingTimeLabel.textColor = .systemRed
+        recordingTimeLabel.isHidden = true
+        recordingTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     private func setupConstraints() {
         view.addSubview(tableView)
         view.addSubview(recordButton)
+        view.addSubview(recordingTimeLabel)
         view.addSubview(emptyStateLabel)
         
         NSLayoutConstraint.activate([
@@ -62,7 +75,11 @@ class MainViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: recordButton.topAnchor, constant: -16),
+            tableView.bottomAnchor.constraint(equalTo: recordingTimeLabel.topAnchor, constant: -8),
+            
+            // Recording Time Label
+            recordingTimeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            recordingTimeLabel.bottomAnchor.constraint(equalTo: recordButton.topAnchor, constant: -8),
             
             // Record Button
             recordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -80,8 +97,74 @@ class MainViewController: UIViewController {
         updateEmptyState()
     }
     
+    private func setupAudioRecording() {
+        AudioRecordingManager.shared.delegate = self
+    }
+    
     @objc private func recordButtonTapped() {
-        print("Record button tapped - Audio recording not implemented yet")
+        if isRecording {
+            stopRecording()
+        } else {
+            startRecording()
+        }
+    }
+    
+    private func startRecording() {
+        guard AudioSessionManager.shared.hasRecordPermission else {
+            requestMicrophonePermission()
+            return
+        }
+        
+        AudioRecordingManager.shared.startRecording()
+    }
+    
+    private func stopRecording() {
+        AudioRecordingManager.shared.stopRecording()
+    }
+    
+    private func requestMicrophonePermission() {
+        AudioSessionManager.shared.requestRecordPermission { [weak self] granted in
+            if granted {
+                self?.startRecording()
+            } else {
+                self?.showPermissionDeniedAlert()
+            }
+        }
+    }
+    
+    private func showPermissionDeniedAlert() {
+        let alert = UIAlertController(
+            title: "Microphone Access Required",
+            message: "Voxx needs microphone access to record your voice entries. Please enable it in Settings.",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
+            if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(settingsURL)
+            }
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(alert, animated: true)
+    }
+    
+    private func updateRecordButtonAppearance() {
+        if isRecording {
+            recordButton.setTitle("⏹ Stop", for: .normal)
+            recordButton.backgroundColor = .systemGray
+        } else {
+            recordButton.setTitle("🎤 Record", for: .normal)
+            recordButton.backgroundColor = .systemRed
+        }
+        recordButton.setTitleColor(.white, for: .normal)
+    }
+    
+    private func formatTime(_ timeInterval: TimeInterval) -> String {
+        let minutes = Int(timeInterval) / 60
+        let seconds = Int(timeInterval) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
     
     private func loadJournalEntries() {
@@ -128,5 +211,46 @@ extension MainViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let entry = journalEntries[indexPath.row]
         print("Selected entry: \(entry.title ?? "Unknown")")
+    }
+}
+
+// MARK: - AudioRecordingManagerDelegate
+extension MainViewController: AudioRecordingManagerDelegate {
+    func recordingDidStart() {
+        isRecording = true
+        updateRecordButtonAppearance()
+        recordingTimeLabel.isHidden = false
+    }
+    
+    func recordingDidStop(audioFilePath: String, duration: TimeInterval) {
+        isRecording = false
+        updateRecordButtonAppearance()
+        recordingTimeLabel.isHidden = true
+        recordingTimeLabel.text = "00:00"
+        
+        // Save the recording to Core Data
+        let _ = DataManager.shared.createJournalEntry(audioFilePath: audioFilePath, duration: duration)
+        loadJournalEntries()
+        
+        print("Recording saved: \(audioFilePath), duration: \(duration)")
+    }
+    
+    func recordingDidFail(error: Error) {
+        isRecording = false
+        updateRecordButtonAppearance()
+        recordingTimeLabel.isHidden = true
+        recordingTimeLabel.text = "00:00"
+        
+        let alert = UIAlertController(
+            title: "Recording Failed",
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    func recordingTimeDidUpdate(currentTime: TimeInterval) {
+        recordingTimeLabel.text = formatTime(currentTime)
     }
 }

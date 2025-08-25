@@ -22,11 +22,11 @@ This document outlines all the tasks to work on to delivery this particular vers
 
 | ID  | Task             | Description                             | Dependencies | Status | Assigned To |
 |-----|------------------|-----------------------------------------|-------------|----------|--------|
-| T05 | Setup AVFoundation | Import and configure audio session | T01 | 🔴 Not Started | AGENT |
-| T06 | Audio Recording Manager | Create AudioRecordingManager class | T05 | 🔴 Not Started | AGENT |
-| T07 | Recording UI Controls | Record button with start/stop states | T04 | 🔴 Not Started | AGENT |
-| T08 | Microphone Permissions | Request and handle microphone permissions | T06 | 🔴 Not Started | AGENT |
-| T09 | Audio File Management | Save recordings to documents directory | T06 | 🔴 Not Started | AGENT |
+| T05 | Setup AVFoundation | Import and configure audio session | T01 | 🟢 Completed | AGENT |
+| T06 | Audio Recording Manager | Create AudioRecordingManager class | T05 | 🟢 Completed | AGENT |
+| T07 | Recording UI Controls | Record button with start/stop states | T04 | 🟢 Completed | AGENT |
+| T08 | Microphone Permissions | Request and handle microphone permissions | T06 | 🟢 Completed | AGENT |
+| T09 | Audio File Management | Save recordings to documents directory | T06 | 🟢 Completed | AGENT |
 
 ## Phase 3: Audio Playback Implementation
 
