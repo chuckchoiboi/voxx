@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,12 +15,12 @@
 		C06 /* AudioRecordingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06 /* AudioRecordingManager.swift */; };
 		C07 /* AudioFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07 /* AudioFileManager.swift */; };
 		C08 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F08 /* Main.storyboard */; };
-		C12 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13 /* AudioPlayerManager.swift */; };
-		C13 /* IntegrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14 /* IntegrationManager.swift */; };
-		C14 /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15 /* ErrorManager.swift */; };
 		C09 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F09 /* LaunchScreen.storyboard */; };
 		C10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10 /* Assets.xcassets */; };
 		C11 /* Voxx.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F11 /* Voxx.xcdatamodeld */; };
+		C12 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13 /* AudioPlayerManager.swift */; };
+		C13 /* IntegrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14 /* IntegrationManager.swift */; };
+		C14 /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15 /* ErrorManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +35,7 @@
 		F08 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F09 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F10 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F11 /* Voxx.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Voxx.xcdatamodeld; sourceTree = "<group>"; };
+		F11SUB /* Voxx.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Voxx.xcdatamodel; sourceTree = "<group>"; };
 		F12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F13 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		F14 /* IntegrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationManager.swift; sourceTree = "<group>"; };
@@ -43,7 +43,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		FWKS = {
+		FWKS /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -53,20 +53,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		ROOT = {
-			isa = PBXGroup;
-			children = (
-				VOXX /* Voxx */,
-				PRODS /* Products */,
-			);
-			sourceTree = "<group>";
-		};
 		PRODS /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				APP /* Voxx.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		ROOT = {
+			isa = PBXGroup;
+			children = (
+				VOXX /* Voxx */,
+				PRODS /* Products */,
+			);
 			sourceTree = "<group>";
 		};
 		VOXX /* Voxx */ = {
@@ -299,6 +299,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5PWBM46C6G;
 				INFOPLIST_FILE = Voxx/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Voxx needs microphone access to record your voice journal entries.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -311,7 +312,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.voxx.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voxx.voice.journal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -326,6 +327,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5PWBM46C6G;
 				INFOPLIST_FILE = Voxx/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Voxx needs microphone access to record your voice journal entries.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -338,7 +340,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.voxx.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voxx.voice.journal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -349,20 +351,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		PCFGS /* Build configuration list for PBXProject "Voxx" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DBG /* Debug */,
-				REL /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		CFGS /* Build configuration list for PBXNativeTarget "Voxx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				TDBG /* Debug */,
 				TREL /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		PCFGS /* Build configuration list for PBXProject "Voxx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBG /* Debug */,
+				REL /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -373,18 +375,12 @@
 		F11 /* Voxx.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				F11SUB,
+				F11SUB /* Voxx.xcdatamodel */,
 			);
-			currentVersion = F11SUB;
+			currentVersion = F11SUB /* Voxx.xcdatamodel */;
 			path = Voxx.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
-		};
-		F11SUB = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.xcdatamodel;
-			path = Voxx.xcdatamodel;
-			sourceTree = "<group>";
 		};
 /* End XCVersionGroup section */
 	};
