@@ -692,6 +692,19 @@ class MainViewController: UIViewController {
             self?.playEntry(entry)
         })
         
+        // AI Processing actions
+        if OpenAIManager.shared.isAPIKeyConfigured() {
+            if entry.transcript?.isEmpty ?? true {
+                actionSheet.addAction(UIAlertAction(title: "🤖 Transcribe with AI", style: .default) { [weak self] _ in
+                    self?.processEntryWithAI(entry)
+                })
+            } else {
+                actionSheet.addAction(UIAlertAction(title: "🔄 Re-process with AI", style: .default) { [weak self] _ in
+                    self?.processEntryWithAI(entry)
+                })
+            }
+        }
+        
         // Share action (if transcript is available)
         if let transcript = entry.transcript, !transcript.isEmpty {
             actionSheet.addAction(UIAlertAction(title: "Share Transcript", style: .default) { [weak self] _ in
@@ -772,6 +785,97 @@ class MainViewController: UIViewController {
         
         // Show success feedback
         showDeleteSuccessMessage()
+    }
+    
+    private func processEntryWithAI(_ entry: JournalEntry) {
+        // Show loading indicator
+        let loadingAlert = UIAlertController(
+            title: "🤖 Processing with AI",
+            message: "Transcribing and summarizing your recording...",
+            preferredStyle: .alert
+        )
+        present(loadingAlert, animated: true)
+        
+        // Process with AI
+        IntegrationManager.shared.processEntryWithAI(entry) { [weak self] success, error in
+            DispatchQueue.main.async {
+                loadingAlert.dismiss(animated: true) {
+                    if success {
+                        // Reload data to show new transcript/summary
+                        self?.loadJournalEntries()
+                        self?.showAIProcessingSuccessMessage()
+                    } else {
+                        self?.showAIProcessingErrorMessage(error)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func showAIProcessingSuccessMessage() {
+        let alert = UIAlertController(
+            title: "✅ AI Processing Complete",
+            message: "Your recording has been transcribed and summarized!",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Great!", style: .default))
+        present(alert, animated: true)
+        
+        // Auto-dismiss after 2 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            if alert.presentingViewController != nil {
+                alert.dismiss(animated: true)
+            }
+        }
+    }
+    
+    private func showAIProcessingErrorMessage(_ error: Error?) {
+        let message = error?.localizedDescription ?? "An unknown error occurred during AI processing."
+        
+        let alert = UIAlertController(
+            title: "❌ AI Processing Failed",
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        if let openAIError = error as? OpenAIError {
+            switch openAIError {
+            case .noAPIKey:
+                alert.addAction(UIAlertAction(title: "Add API Key", style: .default) { [weak self] _ in
+                    self?.showAPIKeySetupInstructions()
+                })
+            case .invalidAPIKey:
+                alert.addAction(UIAlertAction(title: "Check API Key", style: .default) { [weak self] _ in
+                    self?.showAPIKeySetupInstructions()
+                })
+            default:
+                break
+            }
+        }
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    private func showAPIKeySetupInstructions() {
+        let message = """
+        To use AI features, you need to add your OpenAI API key:
+        
+        1. Get an API key from https://platform.openai.com
+        2. Open OpenAIManager.swift in Xcode
+        3. Replace "YOUR_OPENAI_API_KEY_HERE" with your actual API key
+        4. Rebuild the app
+        
+        The API key is stored locally and never shared.
+        """
+        
+        let alert = UIAlertController(
+            title: "🔑 Setup OpenAI API Key",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Got it!", style: .default))
+        present(alert, animated: true)
     }
     
     private func showDeleteSuccessMessage() {
@@ -1101,15 +1205,18 @@ class JournalEntryCell: UITableViewCell {
         dateLabel.text = formatDate(entry.createdAt)
         durationLabel.text = formatDuration(entry.duration)
         
-        // Show transcript preview if available
-        if let transcript = entry.transcript, !transcript.isEmpty {
-            transcriptPreviewLabel.text = transcript
+        // Show AI-generated content if available
+        if let summary = entry.summary, !summary.isEmpty {
+            transcriptPreviewLabel.text = "📝 \(summary)"
             transcriptPreviewLabel.isHidden = false
-        } else if let summary = entry.summary, !summary.isEmpty {
-            transcriptPreviewLabel.text = summary
+        } else if let transcript = entry.transcript, !transcript.isEmpty {
+            // Show truncated transcript if no summary
+            let truncatedTranscript = String(transcript.prefix(150))
+            let displayText = transcript.count > 150 ? "\(truncatedTranscript)..." : truncatedTranscript
+            transcriptPreviewLabel.text = "💬 \(displayText)"
             transcriptPreviewLabel.isHidden = false
         } else {
-            transcriptPreviewLabel.text = "Tap to play recording"
+            transcriptPreviewLabel.text = "Tap to play recording • Long press for AI features"
             transcriptPreviewLabel.isHidden = false
         }
     }

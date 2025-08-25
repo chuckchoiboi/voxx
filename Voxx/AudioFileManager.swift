@@ -89,4 +89,18 @@ class AudioFileManager {
         let requiredBytes = Int64(estimatedMB * 1024 * 1024)
         return availableBytes > requiredBytes
     }
+    
+    // MARK: - Audio Data Loading (for AI Processing)
+    
+    func loadAudioData(from filePath: String) -> Data? {
+        let url = URL(fileURLWithPath: filePath)
+        
+        do {
+            let audioData = try Data(contentsOf: url)
+            return audioData
+        } catch {
+            print("Failed to load audio data from \(filePath): \(error)")
+            return nil
+        }
+    }
 }

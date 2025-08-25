@@ -19,16 +19,24 @@ This document lists features and enhancements derived from the plan. It is a liv
 | B03 | Export Features     | Export audio, transcripts, summaries     | Low | 🔴 Not Started |
 | B04 | Privacy & Security  | Advanced encryption and privacy features | Medium | 🔴 Not Started |
 
-## v0.1.0-mvp-foundation - 🔴 Not Started
-Core voice recording and playback functionality with local storage.
+## v0.1.0-mvp-foundation - 🟢 Completed
+Core voice recording and playback functionality with local storage. **Released: August 2025**
 
 | ID  | Feature                 | Description                              | Priority | Status |
 |-----|-------------------------|------------------------------------------|----------|--------|
-| F01 | iOS Project Setup       | Create Xcode project with Core Data     | High | 🔴 Not Started |
-| F02 | Audio Recording         | Voice recording with unlimited length    | High | 🔴 Not Started |
-| F03 | Audio Playback          | Play recorded audio entries              | High | 🔴 Not Started |
-| F04 | Local Storage           | Core Data setup for journal entries     | High | 🔴 Not Started |
-| F05 | Basic UI                | Simple recording interface               | High | 🔴 Not Started |
+| F01 | iOS Project Setup       | Create Xcode project with Core Data     | High | 🟢 Completed |
+| F02 | Audio Recording         | Voice recording with unlimited length    | High | 🟢 Completed |
+| F03 | Audio Playback          | Play recorded audio entries              | High | 🟢 Completed |
+| F04 | Local Storage           | Core Data setup for journal entries     | High | 🟢 Completed |
+| F05 | Basic UI                | Simple recording interface               | High | 🟢 Completed |
+
+**Bonus Features Delivered:**
+- Advanced Error Handling & Recovery
+- Comprehensive Testing Framework  
+- Professional iOS UI with Search
+- Storage Management & System Health
+- Entry Management (List, Delete, Share)
+- iPhone Deployment & Permissions
 
 ## v0.2.0-ai-integration - 🔴 Not Started
 Integrate OpenAI for transcription and summarization capabilities.
@@ -40,16 +48,16 @@ Integrate OpenAI for transcription and summarization capabilities.
 | F08 | AI Summarization        | Generate summaries from transcripts      | High | 🔴 Not Started |
 | F09 | Error Handling          | Handle API failures gracefully          | Medium | 🔴 Not Started |
 
-## v0.3.0-core-features - 🔴 Not Started
+## v0.3.0-core-features - 🟡 In Progress
 Implement entry management, search, and basic categorization.
 
 | ID  | Feature                 | Description                              | Priority | Status |
 |-----|-------------------------|------------------------------------------|----------|--------|
-| F10 | Entry List View         | Display chronological list of entries   | High | 🔴 Not Started |
-| F11 | Search Functionality    | Full-text search across content          | High | 🔴 Not Started |
+| F10 | Entry List View         | Display chronological list of entries   | High | 🟢 Completed (delivered in v0.1.0) |
+| F11 | Search Functionality    | Full-text search across content          | High | 🟢 Completed (delivered in v0.1.0) |
 | F12 | Basic Categories        | Predefined category system               | Medium | 🔴 Not Started |
-| F13 | Entry Details           | View individual entry with transcript    | Medium | 🔴 Not Started |
-| F14 | Delete Entries          | Remove unwanted journal entries          | Medium | 🔴 Not Started |
+| F13 | Entry Details           | View individual entry with transcript    | Medium | 🟡 Partial (playback implemented) |
+| F14 | Delete Entries          | Remove unwanted journal entries          | Medium | 🟢 Completed (delivered in v0.1.0) |
 
 ## v0.4.0-enhanced-ux - 🔴 Not Started
 Polish user experience with analytics and advanced categorization.

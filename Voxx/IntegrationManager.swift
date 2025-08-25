@@ -134,6 +134,11 @@ class IntegrationManager {
             return
         }
         
+        // Start AI processing in background if OpenAI is configured
+        if OpenAIManager.shared.isAPIKeyConfigured() {
+            processAudioWithAI(entry: entry)
+        }
+        
         delegate?.integrationDidCompleteRecordingFlow(success: true, entry: entry, error: nil)
     }
     
@@ -212,6 +217,96 @@ class IntegrationManager {
         report.totalAudioFiles = allAudioFiles.count
         
         return report
+    }
+    
+    // MARK: - AI Processing
+    
+    private func processAudioWithAI(entry: JournalEntry) {
+        guard let audioFilePath = entry.audioFilePath else { return }
+        
+        // Process in background
+        Task {
+            do {
+                // Load audio data
+                guard let audioData = AudioFileManager.shared.loadAudioData(from: audioFilePath) else {
+                    print("Failed to load audio data for AI processing")
+                    return
+                }
+                
+                // Generate file name for API
+                let fileName = "audio_\(entry.id?.uuidString ?? "unknown").m4a"
+                
+                // Transcribe audio
+                let transcript = try await OpenAIManager.shared.transcribeAudio(
+                    audioData: audioData, 
+                    fileName: fileName
+                )
+                
+                // Generate summary
+                let summary = try await OpenAIManager.shared.generateSummary(from: transcript)
+                
+                // Update entry on main thread
+                await MainActor.run {
+                    DataManager.shared.updateJournalEntry(
+                        entry,
+                        transcript: transcript,
+                        summary: summary
+                    )
+                }
+                
+                print("AI processing completed for entry: \(entry.title ?? "Unknown")")
+                
+            } catch {
+                print("AI processing failed: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    // MARK: - Manual AI Processing
+    
+    func processEntryWithAI(_ entry: JournalEntry, completion: @escaping (Bool, Error?) -> Void) {
+        guard OpenAIManager.shared.isAPIKeyConfigured() else {
+            completion(false, OpenAIError.noAPIKey)
+            return
+        }
+        
+        guard let audioFilePath = entry.audioFilePath else {
+            completion(false, IntegrationError.noAudioFile)
+            return
+        }
+        
+        Task {
+            do {
+                guard let audioData = AudioFileManager.shared.loadAudioData(from: audioFilePath) else {
+                    await MainActor.run {
+                        completion(false, IntegrationError.audioFileNotFound)
+                    }
+                    return
+                }
+                
+                let fileName = "audio_\(entry.id?.uuidString ?? "unknown").m4a"
+                let transcript = try await OpenAIManager.shared.transcribeAudio(
+                    audioData: audioData,
+                    fileName: fileName
+                )
+                
+                let summary = try await OpenAIManager.shared.generateSummary(from: transcript)
+                
+                await MainActor.run {
+                    DataManager.shared.updateJournalEntry(
+                        entry,
+                        transcript: transcript,
+                        summary: summary
+                    )
+                    completion(true, nil)
+                }
+                
+            } catch {
+                await MainActor.run {
+                    completion(false, error)
+                }
+            }
+        }
     }
 }
 
