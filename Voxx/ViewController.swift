@@ -1113,10 +1113,10 @@ class JournalEntryCell: UITableViewCell {
         let formatter = DateFormatter()
         let calendar = Calendar.current
         
-        if calendar.isToday(date) {
+        if calendar.isDate(date, inSameDayAs: Date()) {
             formatter.timeStyle = .short
             return "Today, \(formatter.string(from: date))"
-        } else if calendar.isYesterday(date) {
+        } else if calendar.isDate(date, inSameDayAs: calendar.date(byAdding: .day, value: -1, to: Date()) ?? Date()) {
             formatter.timeStyle = .short
             return "Yesterday, \(formatter.string(from: date))"
         } else {
