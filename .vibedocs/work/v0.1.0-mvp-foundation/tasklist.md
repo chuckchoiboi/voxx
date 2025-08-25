@@ -40,18 +40,18 @@ This document outlines all the tasks to work on to delivery this particular vers
 
 | ID  | Task             | Description                             | Dependencies | Status | Assigned To |
 |-----|------------------|-----------------------------------------|-------------|----------|--------|
-| T13 | JournalEntry Entity | Define Core Data model with attributes | T02 | 🔴 Not Started | AGENT |
-| T14 | Data Manager | Core Data operations (save, fetch, delete) | T13 | 🔴 Not Started | AGENT |
-| T15 | Entry List View | Table view to display journal entries | T04 | 🔴 Not Started | AGENT |
-| T16 | Entry Cell Design | Custom table view cell for entries | T15 | 🔴 Not Started | AGENT |
-| T17 | Connect Data to UI | Bind Core Data to table view | T14, T15 | 🔴 Not Started | AGENT |
+| T13 | JournalEntry Entity | Define Core Data model with attributes | T02 | 🟢 Completed | AGENT |
+| T14 | Data Manager | Core Data operations (save, fetch, delete) | T13 | 🟢 Completed | AGENT |
+| T15 | Entry List View | Table view to display journal entries | T04 | 🟢 Completed | AGENT |
+| T16 | Entry Cell Design | Custom table view cell for entries | T15 | 🟢 Completed | AGENT |
+| T17 | Connect Data to UI | Bind Core Data to table view | T14, T15 | 🟢 Completed | AGENT |
 
 ## Phase 5: Integration & Testing
 
 | ID  | Task             | Description                             | Dependencies | Status | Assigned To |
 |-----|------------------|-----------------------------------------|-------------|----------|--------|
-| T18 | End-to-End Integration | Connect recording, storage, and playback | T09, T12, T17 | 🔴 Not Started | AGENT |
-| T19 | Error Handling | Handle recording/playback errors gracefully | T18 | 🔴 Not Started | AGENT |
-| T20 | Basic Testing | Test core functionality on device | T18 | 🔴 Not Started | AGENT |
-| T21 | UI Polish | Improve visual design and user experience | T18 | 🔴 Not Started | AGENT |
+| T18 | End-to-End Integration | Connect recording, storage, and playback | T09, T12, T17 | 🟢 Completed | AGENT |
+| T19 | Error Handling | Handle recording/playback errors gracefully | T18 | 🟢 Completed | AGENT |
+| T20 | Basic Testing | Test core functionality on device | T18 | 🟢 Completed | AGENT |
+| T21 | UI Polish | Improve visual design and user experience | T18 | 🟢 Completed | AGENT |
 

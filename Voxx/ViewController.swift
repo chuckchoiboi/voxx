@@ -35,6 +35,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupAudioRecording()
+        setupErrorHandling()
         loadJournalEntries()
         
         // Setup refresh control
@@ -53,6 +54,16 @@ class MainViewController: UIViewController {
         // Update navigation bar appearance
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+        
+        // Add debug menu (only in debug builds)
+        #if DEBUG
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Debug",
+            style: .plain,
+            target: self,
+            action: #selector(showDebugMenu)
+        )
+        #endif
     }
     
     private func setupUI() {
@@ -279,6 +290,45 @@ class MainViewController: UIViewController {
     private func setupAudioRecording() {
         AudioRecordingManager.shared.delegate = self
         AudioPlayerManager.shared.delegate = self
+        IntegrationManager.shared.delegate = self
+        
+        // Perform initial system health check
+        performSystemHealthCheck()
+    }
+    
+    private func setupErrorHandling() {
+        // Listen for error retry requests
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleErrorRetry),
+            name: .errorRetryRequested,
+            object: nil
+        )
+        
+        // Listen for storage management requests
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleStorageManagement),
+            name: .storageManagementRequested,
+            object: nil
+        )
+    }
+    
+    @objc private func handleErrorRetry() {
+        // Implement context-aware retry logic
+        print("Error retry requested - implementing context-aware retry")
+        
+        // For now, refresh the data and UI
+        loadJournalEntries()
+        performSystemHealthCheck()
+    }
+    
+    @objc private func handleStorageManagement() {
+        showStorageManagement()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc private func recordButtonTapped() {
@@ -290,12 +340,170 @@ class MainViewController: UIViewController {
     }
     
     private func startRecording() {
-        guard AudioSessionManager.shared.hasRecordPermission else {
-            requestMicrophonePermission()
-            return
+        // Use integrated recording workflow
+        IntegrationManager.shared.startCompleteRecordingWorkflow()
+    }
+    
+    private func performSystemHealthCheck() {
+        let healthReport = IntegrationManager.shared.performSystemHealthCheck()
+        
+        if !healthReport.isHealthy {
+            showSystemHealthWarning(report: healthReport)
         }
         
-        AudioRecordingManager.shared.startRecording()
+        // Check for maintenance needs
+        if healthReport.orphanedFilesCount > 0 {
+            print("Found \(healthReport.orphanedFilesCount) orphaned audio files")
+            // Optionally clean them up automatically or notify user
+        }
+        
+        // Show storage warning if low
+        if healthReport.availableStorageMB < 100 {
+            showStorageWarning(availableMB: healthReport.availableStorageMB)
+        }
+    }
+    
+    private func showSystemHealthWarning(report: SystemHealthReport) {
+        var message = "System Health Check:\n"
+        
+        if !report.hasRecordPermission {
+            message += "• Microphone permission required\n"
+        }
+        if !report.hasEnoughStorage {
+            message += "• Low storage space (\(report.availableStorageMB)MB available)\n"
+        }
+        if !report.audioSystemHealthy {
+            message += "• Audio system issues detected\n"
+        }
+        if !report.coreDataHealthy {
+            message += "• Database connectivity issues\n"
+        }
+        
+        let alert = UIAlertController(
+            title: "⚠️ System Check",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    private func showStorageWarning(availableMB: Int) {
+        let alert = UIAlertController(
+            title: "💾 Storage Warning",
+            message: "Only \(availableMB)MB of storage remaining. Consider deleting old entries to free up space.",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Manage Storage", style: .default) { [weak self] _ in
+            self?.showStorageManagement()
+        })
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    private func showStorageManagement() {
+        let healthReport = IntegrationManager.shared.performSystemHealthCheck()
+        let integrityReport = IntegrationManager.shared.validateDataIntegrity()
+        
+        let message = """
+        Storage: \(healthReport.availableStorageMB)MB available
+        Entries: \(healthReport.totalEntries)
+        Audio Files: \(healthReport.totalAudioFilesMB)MB
+        Orphaned Files: \(integrityReport.orphanedAudioFiles)
+        """
+        
+        let alert = UIAlertController(
+            title: "Storage Management",
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        if integrityReport.orphanedAudioFiles > 0 {
+            alert.addAction(UIAlertAction(title: "Clean Up Orphaned Files", style: .default) { [weak self] _ in
+                self?.performMaintenanceCleanup()
+            })
+        }
+        
+        alert.addAction(UIAlertAction(title: "Delete Old Entries", style: .destructive) { [weak self] _ in
+            self?.showDeleteOldEntriesOptions()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+    
+    private func performMaintenanceCleanup() {
+        IntegrationManager.shared.performMaintenanceCleanup()
+        
+        let alert = UIAlertController(
+            title: "✅ Cleanup Complete",
+            message: "Orphaned audio files have been removed.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+        
+        // Refresh data
+        loadJournalEntries()
+    }
+    
+    private func showDeleteOldEntriesOptions() {
+        let alert = UIAlertController(
+            title: "Delete Old Entries",
+            message: "This will permanently delete entries and cannot be undone.",
+            preferredStyle: .actionSheet
+        )
+        
+        // Get entry counts by age
+        let allEntries = DataManager.shared.fetchAllJournalEntries()
+        let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
+        let sevenDaysAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
+        
+        let oldEntries30 = allEntries.filter { ($0.createdAt ?? Date()) < thirtyDaysAgo }
+        let oldEntries7 = allEntries.filter { ($0.createdAt ?? Date()) < sevenDaysAgo }
+        
+        if oldEntries30.count > 0 {
+            alert.addAction(UIAlertAction(title: "Delete Entries Older Than 30 Days (\(oldEntries30.count))", style: .destructive) { [weak self] _ in
+                self?.deleteEntriesOlderThan(days: 30)
+            })
+        }
+        
+        if oldEntries7.count > 0 {
+            alert.addAction(UIAlertAction(title: "Delete Entries Older Than 7 Days (\(oldEntries7.count))", style: .destructive) { [weak self] _ in
+                self?.deleteEntriesOlderThan(days: 7)
+            })
+        }
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // iPad support
+        if let popover = alert.popoverPresentationController {
+            popover.sourceView = view
+            popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        }
+        
+        present(alert, animated: true)
+    }
+    
+    private func deleteEntriesOlderThan(days: Int) {
+        let cutoffDate = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
+        let oldEntries = DataManager.shared.fetchAllJournalEntries().filter { ($0.createdAt ?? Date()) < cutoffDate }
+        
+        for entry in oldEntries {
+            DataManager.shared.deleteJournalEntry(entry)
+        }
+        
+        loadJournalEntries()
+        
+        let alert = UIAlertController(
+            title: "✅ Cleanup Complete",
+            message: "Deleted \(oldEntries.count) old entries.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
     
     private func stopRecording() {
@@ -421,6 +629,14 @@ class MainViewController: UIViewController {
     }
     
     private func showErrorAlert(message: String) {
+        // Deprecated - use ErrorManager instead
+        ErrorManager.shared.logError(
+            category: .playback,
+            severity: .medium,
+            title: "Playback Error",
+            message: message
+        )
+        
         let alert = UIAlertController(
             title: "Playback Error",
             message: message,
@@ -501,7 +717,10 @@ class MainViewController: UIViewController {
             AudioPlayerManager.shared.stop()
         }
         
-        // Show playback controls for selected entry
+        // Use integrated playback workflow
+        IntegrationManager.shared.startCompletePlaybackWorkflow(for: entry)
+        
+        // Show playback controls for selected entry (if workflow succeeds)
         showPlaybackControls(for: entry)
     }
     
@@ -688,14 +907,10 @@ extension MainViewController: AudioRecordingManagerDelegate {
         recordingTimeLabel.isHidden = true
         recordingTimeLabel.text = "00:00"
         
-        // Save the recording to Core Data
-        let newEntry = DataManager.shared.createJournalEntry(audioFilePath: audioFilePath, duration: duration)
+        // Use integrated workflow for complete recording processing
+        IntegrationManager.shared.completeRecordingWorkflow(audioFilePath: audioFilePath, duration: duration)
         
-        // Reload data and show success feedback
-        loadJournalEntries()
-        showRecordingSuccessMessage(for: newEntry)
-        
-        print("Recording saved: \(audioFilePath), duration: \(duration)")
+        print("Recording completed: \(audioFilePath), duration: \(duration)")
     }
     
     private func showRecordingSuccessMessage(for entry: JournalEntry) {
@@ -726,13 +941,13 @@ extension MainViewController: AudioRecordingManagerDelegate {
         recordingTimeLabel.isHidden = true
         recordingTimeLabel.text = "00:00"
         
-        let alert = UIAlertController(
-            title: "Recording Failed",
-            message: error.localizedDescription,
-            preferredStyle: .alert
+        // Use comprehensive error handling
+        ErrorManager.shared.handleError(
+            error,
+            category: .recording,
+            context: "Audio Recording",
+            presentingViewController: self
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
     }
     
     func recordingTimeDidUpdate(currentTime: TimeInterval) {
@@ -761,7 +976,14 @@ extension MainViewController: AudioPlayerManagerDelegate {
     
     func playbackDidFail(error: Error) {
         updatePlaybackControls()
-        showErrorAlert(message: error.localizedDescription)
+        
+        // Use comprehensive error handling
+        ErrorManager.shared.handleError(
+            error,
+            category: .playback,
+            context: "Audio Playback",
+            presentingViewController: self
+        )
     }
     
     func playbackTimeDidUpdate(currentTime: TimeInterval, duration: TimeInterval) {
@@ -909,4 +1131,161 @@ class JournalEntryCell: UITableViewCell {
         let seconds = Int(duration) % 60
         return String(format: "%d:%02d", minutes, seconds)
     }
+}
+
+// MARK: - IntegrationManagerDelegate
+extension MainViewController: IntegrationManagerDelegate {
+    func integrationDidCompleteRecordingFlow(success: Bool, entry: JournalEntry?, error: Error?) {
+        if success, let entry = entry {
+            // Recording workflow completed successfully
+            loadJournalEntries()
+            showRecordingSuccessMessage(for: entry)
+        } else {
+            // Recording workflow failed
+            isRecording = false
+            updateRecordButtonAppearance()
+            recordingTimeLabel.isHidden = true
+            recordingTimeLabel.text = "00:00"
+            
+            if let error = error {
+                ErrorManager.shared.handleError(
+                    error,
+                    category: .recording,
+                    context: "Recording Workflow",
+                    presentingViewController: self
+                )
+            }
+        }
+    }
+    
+    func integrationDidCompletePlaybackFlow(success: Bool, error: Error?) {
+        if !success, let error = error {
+            ErrorManager.shared.handleError(
+                error,
+                category: .playback,
+                context: "Playback Workflow",
+                presentingViewController: self
+            )
+        }
+    }
+    
+    func integrationDidCompleteDataOperation(success: Bool, error: Error?) {
+        if !success, let error = error {
+            ErrorManager.shared.handleError(
+                error,
+                category: .data,
+                context: "Data Operation",
+                presentingViewController: self
+            )
+        }
+    }
+    
+    func integrationStorageWarning(availableMB: Int) {
+        showStorageWarning(availableMB: availableMB)
+    }
+    
+    private func showErrorAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    #if DEBUG
+    @objc private func showDebugMenu() {
+        let alert = UIAlertController(title: "🛠 Debug Menu", message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "View Error Log", style: .default) { [weak self] _ in
+            self?.showErrorLog()
+        })
+        
+        alert.addAction(UIAlertAction(title: "System Health Check", style: .default) { [weak self] _ in
+            self?.showSystemHealthReport()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Data Integrity Check", style: .default) { [weak self] _ in
+            self?.showDataIntegrityReport()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Trigger Test Error", style: .destructive) { [weak self] _ in
+            self?.triggerTestError()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // iPad support
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItem
+        }
+        
+        present(alert, animated: true)
+    }
+    
+    private func showErrorLog() {
+        let errorLogVC = ErrorLogViewController()
+        let navController = UINavigationController(rootViewController: errorLogVC)
+        present(navController, animated: true)
+    }
+    
+    private func showSystemHealthReport() {
+        let healthReport = IntegrationManager.shared.performSystemHealthCheck()
+        
+        let message = """
+        🎤 Record Permission: \(healthReport.hasRecordPermission ? "✅" : "❌")
+        💾 Storage: \(healthReport.availableStorageMB)MB available
+        📊 Core Data: \(healthReport.coreDataHealthy ? "✅" : "❌")
+        🎵 Audio System: \(healthReport.audioSystemHealthy ? "✅" : "❌")
+        📁 Orphaned Files: \(healthReport.orphanedFilesCount)
+        📝 Total Entries: \(healthReport.totalEntries)
+        💿 Audio Files: \(healthReport.totalAudioFilesMB)MB
+        """
+        
+        let alert = UIAlertController(
+            title: healthReport.isHealthy ? "✅ System Healthy" : "⚠️ System Issues",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    private func showDataIntegrityReport() {
+        let integrityReport = IntegrationManager.shared.validateDataIntegrity()
+        
+        let message = """
+        📊 Data Integrity Score: \(String(format: "%.1f%%", integrityReport.integrityScore * 100))
+        
+        📝 Total Entries: \(integrityReport.totalEntries)
+        ✅ Valid Entries: \(integrityReport.validEntries)
+        ❌ Missing Files: \(integrityReport.entriesWithMissingFiles)
+        ⚠️ No Audio Path: \(integrityReport.entriesWithoutAudioPath)
+        💿 Total Audio Files: \(integrityReport.totalAudioFiles)
+        🗂 Orphaned Files: \(integrityReport.orphanedAudioFiles)
+        """
+        
+        let alert = UIAlertController(
+            title: "📊 Data Integrity Report",
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        if integrityReport.orphanedAudioFiles > 0 {
+            alert.addAction(UIAlertAction(title: "Clean Up Orphans", style: .destructive) { [weak self] _ in
+                self?.performMaintenanceCleanup()
+            })
+        }
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
+    private func triggerTestError() {
+        let testError = IntegrationError.audioFileNotFound
+        ErrorManager.shared.handleError(
+            testError,
+            category: .playback,
+            context: "Debug Test",
+            presentingViewController: self
+        )
+    }
+    #endif
 }

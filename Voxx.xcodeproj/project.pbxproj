@@ -16,6 +16,8 @@
 		C07 /* AudioFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07 /* AudioFileManager.swift */; };
 		C08 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F08 /* Main.storyboard */; };
 		C12 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13 /* AudioPlayerManager.swift */; };
+		C13 /* IntegrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14 /* IntegrationManager.swift */; };
+		C14 /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15 /* ErrorManager.swift */; };
 		C09 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F09 /* LaunchScreen.storyboard */; };
 		C10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10 /* Assets.xcassets */; };
 		C11 /* Voxx.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F11 /* Voxx.xcdatamodeld */; };
@@ -36,6 +38,8 @@
 		F11 /* Voxx.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Voxx.xcdatamodeld; sourceTree = "<group>"; };
 		F12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F13 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
+		F14 /* IntegrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationManager.swift; sourceTree = "<group>"; };
+		F15 /* ErrorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +80,8 @@
 				F06 /* AudioRecordingManager.swift */,
 				F07 /* AudioFileManager.swift */,
 				F13 /* AudioPlayerManager.swift */,
+				F14 /* IntegrationManager.swift */,
+				F15 /* ErrorManager.swift */,
 				F08 /* Main.storyboard */,
 				F09 /* LaunchScreen.storyboard */,
 				F10 /* Assets.xcassets */,
@@ -164,6 +170,8 @@
 				C06 /* AudioRecordingManager.swift in Sources */,
 				C07 /* AudioFileManager.swift in Sources */,
 				C12 /* AudioPlayerManager.swift in Sources */,
+				C13 /* IntegrationManager.swift in Sources */,
+				C14 /* ErrorManager.swift in Sources */,
 				C11 /* Voxx.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
