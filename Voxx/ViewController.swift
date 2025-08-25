@@ -340,6 +340,12 @@ class MainViewController: UIViewController {
     }
     
     private func startRecording() {
+        // Check for microphone permission first
+        if !AudioSessionManager.shared.hasRecordPermission {
+            requestMicrophonePermission()
+            return
+        }
+        
         // Use integrated recording workflow
         IntegrationManager.shared.startCompleteRecordingWorkflow()
     }
