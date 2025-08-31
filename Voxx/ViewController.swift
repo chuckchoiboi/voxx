@@ -51,6 +51,9 @@ class MainViewController: UIViewController {
         
         // Setup long press gesture for additional entry actions
         setupLongPressGesture()
+        
+        // Setup navigation items
+        setupNavigationItems()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,15 +65,29 @@ class MainViewController: UIViewController {
         // Update navigation bar appearance
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+    }
+    
+    private func setupNavigationItems() {
+        // Add Settings button
+        let settingsButton = UIBarButtonItem(
+            image: UIImage(systemName: "gear"),
+            style: .plain,
+            target: self,
+            action: #selector(showSettings)
+        )
         
-        // Add debug menu (only in debug builds)
+        // Always show settings button
+        navigationItem.rightBarButtonItem = settingsButton
+        
+        // Add debug menu in debug builds
         #if DEBUG
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        let debugButton = UIBarButtonItem(
             title: "Debug",
             style: .plain,
             target: self,
             action: #selector(showDebugMenu)
         )
+        navigationItem.rightBarButtonItems = [settingsButton, debugButton]
         #endif
     }
     
@@ -90,12 +107,17 @@ class MainViewController: UIViewController {
     }
     
     private func setupEmptyStateLabel() {
-        emptyStateLabel.text = "No voice entries yet.\nTap the record button to get started!"
+        emptyStateLabel.text = "No voice entries yet.\nTap the record button to get started!\n\nTap here for Settings ⚙️"
         emptyStateLabel.textAlignment = .center
         emptyStateLabel.numberOfLines = 0
         emptyStateLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         emptyStateLabel.textColor = .secondaryLabel
         emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
+        emptyStateLabel.isUserInteractionEnabled = true
+        
+        // Add tap gesture for settings
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(emptyStateTapped))
+        emptyStateLabel.addGestureRecognizer(tapGesture)
     }
     
     private func setupSearchController() {
@@ -1147,8 +1169,7 @@ extension MainViewController: UITableViewDelegate {
         
         // Navigate to EntryDetailsViewController
         let detailsVC = EntryDetailsViewController(entry: entry)
-        detailsVC.modalPresentationStyle = .overFullScreen
-        present(detailsVC, animated: true)
+        navigationController?.pushViewController(detailsVC, animated: true)
     }
 }
 
@@ -1658,6 +1679,19 @@ extension MainViewController: IntegrationManagerDelegate {
         )
     }
     #endif
+    
+    // MARK: - Settings
+    
+    @objc private func showSettings() {
+        let settingsVC = SettingsViewController()
+        let navController = UINavigationController(rootViewController: settingsVC)
+        navController.modalPresentationStyle = .formSheet
+        present(navController, animated: true)
+    }
+    
+    @objc private func emptyStateTapped() {
+        showSettings()
+    }
 }
 
 // MARK: - String Extension for Hex Colors

@@ -83,11 +83,7 @@ class EntryDetailsViewController: UIViewController {
         
         // Navigation
         navigationItem.title = "Entry Details"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .done,
-            target: self,
-            action: #selector(dismissViewController)
-        )
+        // The back button will be automatically provided by the navigation controller
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .action,
             target: self,
@@ -469,9 +465,6 @@ class EntryDetailsViewController: UIViewController {
     
     // MARK: - Actions
     
-    @objc private func dismissViewController() {
-        dismiss(animated: true)
-    }
     
     @objc private func showActionMenu() {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

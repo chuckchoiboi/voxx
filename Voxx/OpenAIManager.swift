@@ -7,15 +7,19 @@ class OpenAIManager {
     
     // MARK: - Configuration
     
-    private let apiKey: String = {
-        // Try environment variable first (for CI/CD)
-        if let envKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"] {
+    private var apiKey: String {
+        // Priority order: Environment variable -> Keychain -> Config file (fallback)
+        if let envKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"], !envKey.isEmpty {
             return envKey
         }
         
-        // Use local config file (safer for personal use)
+        if let keychainKey = KeychainHelper.shared.retrieveAPIKey(), !keychainKey.isEmpty {
+            return keychainKey
+        }
+        
+        // Fallback to config file (for development)
         return Config.openAIAPIKey
-    }()
+    }
     private let baseURL = "https://api.openai.com/v1"
     
     // MARK: - API Models
@@ -77,6 +81,10 @@ class OpenAIManager {
     }
     
     func validateAPIKey() async throws -> Bool {
+        return try await validateAPIKey(apiKey)
+    }
+    
+    func validateAPIKey(_ testApiKey: String) async throws -> Bool {
         // Test API key with a simple request
         let messages = [ChatMessage(role: "user", content: "Hello")]
         let request = ChatCompletionRequest(
@@ -87,7 +95,7 @@ class OpenAIManager {
         )
         
         do {
-            _ = try await generateChatCompletion(request: request)
+            _ = try await generateChatCompletion(request: request, customAPIKey: testApiKey)
             return true
         } catch {
             throw OpenAIError.invalidAPIKey
@@ -121,6 +129,13 @@ class OpenAIManager {
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
         body.append("Content-Disposition: form-data; name=\"response_format\"\r\n\r\n".data(using: .utf8)!)
         body.append("json\r\n".data(using: .utf8)!)
+        
+        // Add language parameter if selected (for transcription in specific language)
+        if let languageCode = LanguagePreferences.shared.getSelectedLanguageCode() {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"language\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(languageCode)\r\n".data(using: .utf8)!)
+        }
         
         // Add audio file
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
@@ -166,9 +181,16 @@ class OpenAIManager {
             throw OpenAIError.noAPIKey
         }
         
-        let prompt = """
-        Please provide a concise summary of the following voice journal entry. Focus on the main topics, key insights, and important details. Keep it brief but comprehensive:
+        let selectedLanguage = LanguagePreferences.shared.getSelectedLanguage()
+        let languageInstruction = selectedLanguage.code == "auto" ? "" : 
+            "Please respond in \(selectedLanguage.name). If the original text is in a different language, translate the summary to \(selectedLanguage.name)."
         
+        let prompt = """
+        Please provide a concise summary of the following voice journal entry. Focus on the main topics, key insights, and important details. Keep it brief but comprehensive.
+        
+        \(languageInstruction)
+        
+        Text to summarize:
         \(transcript)
         """
         
@@ -194,9 +216,16 @@ class OpenAIManager {
             throw OpenAIError.noAPIKey
         }
         
-        let prompt = """
-        Analyze this voice journal entry and provide 2-3 key insights or themes. Focus on emotions, patterns, or important realizations:
+        let selectedLanguage = LanguagePreferences.shared.getSelectedLanguage()
+        let languageInstruction = selectedLanguage.code == "auto" ? "" : 
+            "Please respond in \(selectedLanguage.name). If the original text is in a different language, translate your insights to \(selectedLanguage.name)."
         
+        let prompt = """
+        Analyze this voice journal entry and provide 2-3 key insights or themes. Focus on emotions, patterns, or important realizations.
+        
+        \(languageInstruction)
+        
+        Text to analyze:
         \(transcript)
         """
         
@@ -219,11 +248,12 @@ class OpenAIManager {
     
     // MARK: - Private Methods
     
-    private func generateChatCompletion(request: ChatCompletionRequest) async throws -> ChatCompletionResponse {
+    private func generateChatCompletion(request: ChatCompletionRequest, customAPIKey: String? = nil) async throws -> ChatCompletionResponse {
+        let keyToUse = customAPIKey ?? apiKey
         let url = URL(string: "\(baseURL)/chat/completions")!
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
-        urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("Bearer \(keyToUse)", forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         do {

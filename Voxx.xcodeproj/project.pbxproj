@@ -26,7 +26,9 @@
 		C17 /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18 /* CategoryManager.swift */; };
 		C18 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19 /* TagManager.swift */; };
 		C19 /* EntryDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20 /* EntryDetailsViewController.swift */; };
-/* End PBXBuildFile section */
+		8A615BFD8DB6470595DAA95F /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878C5B9294144A9AB8BF26A0 /* KeychainHelper.swift */; };
+		226DB30985844CF2AB243735 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F00040051B4ED98B0CD5A6 /* SettingsViewController.swift */; };
+		/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		APP /* Voxx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Voxx.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,7 +52,9 @@
 		F18 /* CategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManager.swift; sourceTree = "<group>"; };
 		F19 /* TagManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManager.swift; sourceTree = "<group>"; };
 		F20 /* EntryDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryDetailsViewController.swift; sourceTree = "<group>"; };
-/* End PBXFileReference section */
+		878C5B9294144A9AB8BF26A0 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		56F00040051B4ED98B0CD5A6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		FWKS /* Frameworks */ = {
@@ -102,7 +106,8 @@
 				F10 /* Assets.xcassets */,
 				F11 /* Voxx.xcdatamodeld */,
 				F12 /* Info.plist */,
-			);
+				878C5B9294144A9AB8BF26A0 /* KeychainHelper.swift */,
+				56F00040051B4ED98B0CD5A6 /* SettingsViewController.swift */,);
 			path = Voxx;
 			sourceTree = "<group>";
 		};
@@ -193,7 +198,8 @@
 				C18 /* TagManager.swift in Sources */,
 				C19 /* EntryDetailsViewController.swift in Sources */,
 				C11 /* Voxx.xcdatamodeld in Sources */,
-			);
+				8A615BFD8DB6470595DAA95F /* KeychainHelper.swift in Sources */,
+				226DB30985844CF2AB243735 /* SettingsViewController.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
